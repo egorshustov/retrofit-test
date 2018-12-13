@@ -3,33 +3,98 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-    <Button
-            android:id="@+id/btnGet"
-            android:text="@string/btn_get"
+
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/btnGetWithAlias"
-            android:text="@string/btn_get_with_alias"
+            android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/hint_id"
+                android:ems="10"
+                android:id="@+id/editId"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/hint_title"
+                android:ems="10"
+                android:id="@+id/editTitle"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/hint_description"
+                android:ems="10"
+                android:id="@+id/editDescription"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/hint_completed"
+                android:ems="10"
+                android:id="@+id/editCompleted"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/btnPost"
-            android:text="@string/btn_post"
+            android:layout_height="wrap_content">
+        <Button
+                android:id="@+id/btnGet"
+                android:text="@string/btn_get"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+        <Button
+                android:id="@+id/btnGetWithAlias"
+                android:text="@string/btn_get_with_alias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+        <Button
+                android:id="@+id/btnPost"
+                android:text="@string/btn_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/btnPut"
-            android:text="@string/btn_put"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/btnDelete"
-            android:text="@string/btn_delete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+        <Button
+                android:id="@+id/btnPut"
+                android:text="@string/btn_put"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+        <Button
+                android:id="@+id/btnDelete"
+                android:text="@string/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+    </LinearLayout>
+
     <TextView
             android:id="@+id/textResponse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
 </LinearLayout>

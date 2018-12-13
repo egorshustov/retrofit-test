@@ -16,7 +16,7 @@ interface ApiInterface {
     fun apiPostRequest(@Body item: Item): Call<Item>
 
     @PUT("api_test_retrofit/tasks/{id}")
-    fun apiPutRequestWithAlias(@Path("id") id: String, @Body item: Item): Call<String>
+    fun apiPutRequestWithAlias(@Path("id") id: String, @Body item: Item): Call<Item>
 
     @DELETE("api_test_retrofit/tasks/{id}")
     fun apiDeleteRequestWithAlias(@Path("id") id: String): Call<Item>

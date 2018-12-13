@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">RetrofitTest</string>
-    <string name="btn_get">GET</string>
-    <string name="btn_get_with_alias">GET WITH ALIAS</string>
-    <string name="btn_post">POST</string>
-    <string name="btn_put">PUT</string>
-    <string name="btn_delete">DELETE</string>
+    <string name="btn_get">GET ALL</string>
+    <string name="btn_get_with_alias">GET BY ID</string>
+    <string name="btn_post">POST ITEM</string>
+    <string name="btn_put">PUT ITEM</string>
+    <string name="btn_delete">DELETE BY ID</string>
+    <string name="hint_id">id</string>
+    <string name="hint_title">title</string>
+    <string name="hint_description">description</string>
+    <string name="hint_completed">completed</string>
 </resources>

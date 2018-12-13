@@ -1,117 +1,110 @@
 package com.egorshustov.retrofittest
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+
+    private var editId: EditText? = null
+    private var editTitle: EditText? = null
+    private var editDescription: EditText? = null
+    private var editCompleted: EditText? = null
+    private val retriesMax: Int = 3
+    private val apiService = ApiInterface.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        editId = findViewById(R.id.editId)
+        editTitle = findViewById(R.id.editTitle)
+        editDescription = findViewById(R.id.editDescription)
+        editCompleted = findViewById(R.id.editCompleted)
+
         btnGet.setOnClickListener {
-            getRequest()
+            templateRequest(apiService.apiGetRequest())
         }
+
         btnGetWithAlias.setOnClickListener {
-            getRequestWithAlias()
+            templateRequest(apiService.apiGetRequestWithAlias(editId!!.text.toString()))
         }
+
         btnPost.setOnClickListener {
-            postRequest()
+            templateRequest(
+                apiService.apiPostRequest(
+                    Item(
+                        editId!!.text.toString(), editTitle!!.text.toString(),
+                        editDescription!!.text.toString(), editCompleted!!.text.toString()
+                    )
+                )
+            )
         }
+
         btnPut.setOnClickListener {
-            putRequest()
+            templateRequest(
+                apiService.apiPutRequestWithAlias(
+                    editId!!.text.toString(), Item(
+                        editId!!.text.toString(),
+                        editTitle!!.text.toString(), editDescription!!.text.toString(), editCompleted!!.text.toString()
+                    )
+                )
+            )
         }
+
         btnDelete.setOnClickListener {
-            deleteRequest()
+            templateRequest(apiService.apiDeleteRequestWithAlias(editId!!.text.toString()))
         }
     }
 
-    private fun getRequest() {
-        val apiService = ApiInterface.create()
-        val call = apiService.apiGetRequest()
+    private fun <T> templateRequest(call: Call<T>) {
+        var retryCount = 0
+        textResponse.text = ""
+        call.enqueue(object : Callback<T> {
+            override fun onResponse(call: Call<T>, response: Response<T>?) {
+                if (response == null) {
+                    return
+                }
 
-        call.enqueue(object : Callback<List<Item>> {
-            override fun onResponse(call: Call<List<Item>>, response: retrofit2.Response<List<Item>>?) {
-                if (response != null) {
-                    val list: List<Item> = response.body()!!
-                    var lines = ""
-                    for (item: Item in list.iterator()) {
-                        lines = lines + item.id + " " + item.title + "\n"
+                val code = response.code()
+                when (code) {
+                    200 -> {
+                        textResponse.append(responseItemToString(response.body()))
+                        (response.body() as? List<*>)?.let {
+                            var lines = ""
+                            for (item in it.iterator()) {
+                                lines += responseItemToString(item)
+                            }
+                            textResponse.append(lines)
+                        }
                     }
-                    textResponse.text = lines
+
+                    500 -> if (retryCount++ < retriesMax) {
+                        textResponse.append("Error code: $code. Retry count: $retryCount\n")
+                        retry()
+                    }
+
+                    else -> textResponse.append("Error code: $code")
                 }
             }
 
-            override fun onFailure(call: Call<List<Item>>, t: Throwable) {
-            }
-        })
-    }
-
-    private fun getRequestWithAlias() {
-        val apiService = ApiInterface.create()
-        val call = apiService.apiGetRequestWithAlias("125")
-
-        call.enqueue(object : Callback<Item> {
-            override fun onResponse(call: Call<Item>, response: retrofit2.Response<Item>?) {
-                if (response != null) {
-                    val item: Item = response.body()!!
-                    textResponse.text = (item.id + " " + item.title)
+            private fun responseItemToString(responseItem: Any?) : String {
+                (responseItem as? Item)?.let {
+                    return it.id + " " + it.title + "\n"
                 }
+                return ""
             }
 
-            override fun onFailure(call: Call<Item>, t: Throwable) {
-            }
-        })
-    }
-
-    private fun postRequest() {
-        val apiService = ApiInterface.create()
-        val call = apiService.apiPostRequest(Item("7878765", "ne7656w", "not7567e", "0"))
-
-        call.enqueue(object : Callback<Item> {
-            override fun onResponse(call: Call<Item>, response: retrofit2.Response<Item>?) {
-                if (response != null) {
-                    val item: Item = response.body()!!
-                    textResponse.text = (item.id + " " + item.title)
-                }
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                textResponse.append(t.toString())
             }
 
-            override fun onFailure(call: Call<Item>, t: Throwable) {
-            }
-        })
-    }
-
-    private fun putRequest() {
-        val apiService = ApiInterface.create()
-        val call = apiService.apiPutRequestWithAlias("136", Item("13576", "145736", "13446", "1"))
-
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: retrofit2.Response<String>?) {
-                // Ответ не приходит, запись изменяется
-                if (response != null) {
-                    textResponse.text = response.toString()
-                }
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-            }
-        })
-    }
-
-    private fun deleteRequest() {
-        val apiService = ApiInterface.create()
-        val call = apiService.apiDeleteRequestWithAlias("5765")
-
-        call.enqueue(object : Callback<Item> {
-            override fun onResponse(call: Call<Item>, response: retrofit2.Response<Item>?) {
-                if (response != null) {
-                    val item: Item = response.body()!!
-                    textResponse.text = (item.id + " " + item.title)
-                }
-            }
-
-            override fun onFailure(call: Call<Item>, t: Throwable) {
+            fun retry() {
+                call.clone().enqueue(this)
             }
         })
     }

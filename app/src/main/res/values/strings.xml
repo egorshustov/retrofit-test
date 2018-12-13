@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RetrofitTest</string>
+    <string name="btn_get">GET</string>
+    <string name="btn_get_with_alias">GET WITH ALIAS</string>
+    <string name="btn_post">POST</string>
+    <string name="btn_put">PUT</string>
+    <string name="btn_delete">DELETE</string>
+</resources>
